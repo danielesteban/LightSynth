@@ -1,0 +1,33 @@
+<div id="main" class="container">
+	<h1 style="text-align: center">
+		{{synth.roots[synth.note % 12].name}} ({{synth.note}})
+	</h1>
+	<br><br>
+	Left: {{percents[0].toFixed(2)}}%
+	<div class="bar" data-ng-style="{width:percents[0] + '%'}"></div>
+	Right: {{percents[1].toFixed(2)}}%
+	<div class="bar" data-ng-style="{width:percents[1] + '%'}"></div>
+	AVG: {{avg.toFixed(2)}}%
+	<div class="bar" data-ng-style="{width:avg + '%'}"></div>
+	<div class="row clearfix">
+		<div class="half">
+			Root:<br>
+			<select data-ng-model="synth.root" data-ng-options="root.name for root in synth.roots"></select><br>
+			Scale:<br>
+			<select data-ng-model="synth.scale" data-ng-options="key for (key, scale) in synth.scales"></select><br>
+			Chord:<br>
+			<select data-ng-model="synth.chord" data-ng-options="key for (key, scale) in synth.chords"></select>
+		</div>
+		<div class="half">
+			rootOctave: {{synth.rootOctave}}<br>
+			<input data-ng-model="synth.rootOctave" type="range" step="1" min="1" max="6"><br>
+			numOctaves: {{synth.numOctaves}}<br>
+			<input data-ng-model="synth.numOctaves" type="range" step="1" min="1" max="4">
+		</div>
+	</div>
+	<br>
+	<div style="text-align:center">
+		<button data-ng-click="calibrate()">Calibrate</button><br><br>
+		<span>{{calibrating}}</span>
+	</div>
+</div>

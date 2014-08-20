@@ -1,0 +1,20 @@
+{
+	"name": "LightSynth",
+	"version": "1.0.0",
+	"author": "Daniel Esteban Nombela <dani@dabuten.co>",
+	"dependencies": {
+		"midi": "latest",
+		"serialport": "latest"
+	},
+	"private": true,
+	"main": "index.html",
+	"window": {
+		"title": "LightSynth",
+		"width": 640,
+		"height": 480,
+		"toolbar": false 
+	},
+	"webkit": {
+		"plugin": true
+	}
+}

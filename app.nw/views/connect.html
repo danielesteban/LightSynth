@@ -1,0 +1,10 @@
+<div id="connect" class="container">
+	<form data-ng-submit="submit()">
+		<h1>Select a serial port</h1>
+		<label class="radio" data-ng-repeat="port in ports">
+			<input type="radio" data-ng-model="portPath" data-ng-value="port.comName">
+			{{port.comName}}
+		</label>
+		<button type="submit">Connect to device</button>
+	</form>
+</div>
