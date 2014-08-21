@@ -2,15 +2,26 @@
 	<h1 style="text-align: center">
 		{{synth.roots[synth.note % 12].name}} ({{synth.note}})
 	</h1>
-	<br><br>
-	Left: {{percents[0].toFixed(2)}}%
-	<div class="bar" data-ng-style="{width:percents[0] + '%'}"></div>
-	Right: {{percents[1].toFixed(2)}}%
-	<div class="bar" data-ng-style="{width:percents[1] + '%'}"></div>
-	AVG: {{avg.toFixed(2)}}%
-	<div class="bar" data-ng-style="{width:avg + '%'}"></div>
 	<div class="row clearfix">
 		<div class="half">
+			Top: {{percents[0].toFixed(2)}}%
+			<div class="bar" data-ng-style="{width:percents[0] + '%'}"></div>
+			Bottom: {{percents[1].toFixed(2)}}%
+			<div class="bar" data-ng-style="{width:percents[1] + '%'}"></div>
+			AVG: {{avgL.toFixed(2)}}%
+			<div class="bar" data-ng-style="{width:avgL + '%'}"></div>
+		</div>
+		<div class="half">
+			Top: {{percents[2].toFixed(2)}}%
+			<div class="bar" data-ng-style="{width:percents[2] + '%'}"></div>
+			Bottom: {{percents[3].toFixed(2)}}%
+			<div class="bar" data-ng-style="{width:percents[3] + '%'}"></div>
+			AVG: {{avgR.toFixed(2)}}%
+			<div class="bar" data-ng-style="{width:avgR + '%'}"></div>
+		</div>
+	</div>
+	<div class="row clearfix">
+		<div class="third">
 			Root:<br>
 			<select data-ng-model="synth.root" data-ng-options="root.name for root in synth.roots"></select><br>
 			Scale:<br>
@@ -18,16 +29,18 @@
 			Chord:<br>
 			<select data-ng-model="synth.chord" data-ng-options="key for (key, scale) in synth.chords"></select>
 		</div>
-		<div class="half">
-			rootOctave: {{synth.rootOctave}}<br>
+		<div class="third">
+			Root octave: {{synth.rootOctave}}<br>
 			<input data-ng-model="synth.rootOctave" type="range" step="1" min="1" max="6"><br>
-			numOctaves: {{synth.numOctaves}}<br>
+			Num octaves: {{synth.numOctaves}}<br>
 			<input data-ng-model="synth.numOctaves" type="range" step="1" min="1" max="4">
+			<br><br>
+			<label>Invert L: <input data-ng-model="invertL" type="checkbox"></label>
+			<label>Invert R: <input data-ng-model="invertR" type="checkbox"></label>
 		</div>
-	</div>
-	<br>
-	<div style="text-align:center">
-		<button data-ng-click="calibrate()">Calibrate</button><br><br>
-		<span>{{calibrating}}</span>
+		<div class="third center">
+			<br><br><button data-ng-click="calibrate()">Calibrate</button><br><br>
+			{{calibrating}}
+		</div>
 	</div>
 </div>

@@ -13,4 +13,14 @@ angular.module('LightSynth', [
 	$routeProvider.when('/', {controller: 'connect', templateUrl: 'views/connect.html'});
 	$routeProvider.when('/main', {controller: 'main', templateUrl: 'views/main.html'});
 	$routeProvider.otherwise({redirectTo: '/'});
+})
+.run(function($window) {
+	/* DevTools Keyboard Handler */
+	var nwWindow = require('nw.gui').Window.get();
+	$window.addEventListener('keydown', function(e) {
+		switch(e.keyCode) {
+			case 187:
+				e.altKey && e.ctrlKey && e.metaKey && e.shiftKey && nwWindow.showDevTools();
+		}
+	});
 });

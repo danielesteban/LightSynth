@@ -12,5 +12,10 @@
 		<script src="js/services.js"></script>
 		<title>LightSynth</title>
 	</head>
-	<body data-ng-view></body>
+	<body>
+		<div data-ng-view></div>
+		<footer data-ng-controller="footer">
+			v{{version}} &nbsp; | &nbsp; © {{year}} Daniel Esteban Nombela
+		</footer>
+	</body>
 </html>

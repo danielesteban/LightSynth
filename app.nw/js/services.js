@@ -64,9 +64,14 @@ angular.module('LightSynth.services', [])
 		roots = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
 		chords = {
 			'Single Note': [0],
-			'Octaves': [0, 12],
+			'Octave': [0, 12],
+			'Power Chord': [0, 7, 12],
+			'Major': [0, 4, 7],
+			'Minor': [0, 3, 7],
 			'Maj7': [0, 4, 7, 11],
-			'Power Chords': [0, 7, 12]
+			'Min7': [0, 3, 7, 10],
+			'Maj9': [0, 4, 7, 11, 14],
+			'Min9': [0, 3, 7, 10, 14]
 		},
 		scales = {
 			'All Notes': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -103,6 +108,8 @@ angular.module('LightSynth.services', [])
 
 	midi.openVirtualPort("LightSynth");
 	return {
+		note: 0,
+		volume: 100,
 		roots: roots,
 		root: roots[0],
 		scales: scales,
@@ -118,12 +125,17 @@ angular.module('LightSynth.services', [])
 
 			if(this.note === midiNote) return;
 			this.note = midiNote;
-			for(var i in notesOn) midi.sendMessage([128, i, 127]);
+			for(var i in notesOn) midi.sendMessage([128, i, 0]);
 			notesOn = {};
 			this.chord.forEach(function(interval) {
 				notesOn[midiNote + interval] = true;
 				midi.sendMessage([144, midiNote + interval, velocity || 127]);
 			});
+		},
+		setVolume: function(percent) {
+			var volume = Math.round(percent * 127 / 100);
+			if(this.volume === volume) return;
+			midi.sendMessage([176, 7, this.volume = volume]);
 		}
 	};
 });
