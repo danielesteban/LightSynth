@@ -23,4 +23,9 @@ angular.module('LightSynth', [
 				e.altKey && e.ctrlKey && e.metaKey && e.shiftKey && nwWindow.showDevTools();
 		}
 	});
+})
+.run(function(autoupdater) {
+	/* Run the autoupdater */
+	autoupdater.run();
 });
+

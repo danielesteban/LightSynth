@@ -14,9 +14,9 @@ These are two photoresistors for each hand. The left hand controls the pitch & t
 Enjoy! ;P
 
 ## Downloads
-**v1.0.0:**
+**v1.0.1:** (Aug 22, 2014)
 
- * Mac: [32bit, 10.7+](https://github.com/danielesteban/LightSynth/releases/download/v1.0.0/LightSynth-v.1.0.0.dmg)
+ * Mac: [32bit, 10.7+](https://github.com/danielesteban/LightSynth/releases/download/v1.0.1/LightSynth-darwin.dmg)
 
 ![Connect View](https://raw.githubusercontent.com/danielesteban/LightSynth/master/screenshots/connect.png)
 
