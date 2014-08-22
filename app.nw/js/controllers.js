@@ -131,7 +131,7 @@ angular.module('LightSynth.controllers', [])
 		$window.removeEventListener('keydown', keydownHandler, false);
 	});
 })
-.controller('footer', function($scope) {
-	$scope.version = JSON.parse(require('fs').readFileSync(require('path').join(process.cwd(), 'package.json'))).version;
+.controller('footer', function($scope, autoupdater) {
+	$scope.version = autoupdater.currentVersion;
 	$scope.year = (new Date()).getFullYear();
 });

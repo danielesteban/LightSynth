@@ -138,5 +138,70 @@ angular.module('LightSynth.services', [])
 			midi.sendMessage([176, 7, this.volume = volume]);
 		}
 	};
+})
+.factory('autoupdater', function() {
+	var fs = require('fs'),
+		path = require('path'),
+		https = require('https'),
+		packagePath = path.join(process.platform === 'darwin' ? path.join(process.cwd(), '..') : path.dirname(process.execPath), 'package.nw'),
+		versionCompare = function(left, right) {
+			if(typeof left + typeof right !== 'stringstring') return false;
+
+			var a = left.split('.'),
+				b = right.split('.'),
+				i = 0, len = Math.max(a.length, b.length);
+
+			for(; i < len; i++) {
+				if((a[i] && !b[i] && parseInt(a[i]) > 0) || (parseInt(a[i]) > parseInt(b[i]))) return 1;
+				else if ((b[i] && !a[i] && parseInt(b[i]) > 0) || (parseInt(a[i]) < parseInt(b[i]))) return -1;
+			}
+
+			return 0;
+		};
+
+	return {
+		currentVersion: JSON.parse(fs.readFileSync(require('path').join(process.cwd(), 'package.json'))).version,
+		run: function() {
+			var self = this;
+			https.get({
+				host: 'api.github.com',
+				headers: {'user-agent': 'LightSynth'},
+				path: '/repos/danielesteban/LightSynth/releases'
+			}, function(res) {
+				var releases = '';
+				res.setEncoding('utf-8');
+				res.on('data', function(chunk) {
+					releases += chunk;
+				});
+				res.on('end', function() {
+					try {
+						releases = JSON.parse(releases);
+					} catch(e) {
+						return;
+					}
+					if(versionCompare(self.currentVersion, releases[0].tag_name.substr(1)) < 0) {
+						releases[0].assets.forEach(function(asset) {
+							if(asset.name === 'LightSynth-' + process.platform + '.nw') {
+								https.get(asset.browser_download_url, function(res) {
+									https.get(res.headers.location, function(res) {
+										var data;
+										res.on('data', function(chunk) {
+											data = data ? Buffer.concat([data, chunk]) : chunk;
+										});
+										res.on('end', function() {
+											if(process.platform === 'darwin') new (require('adm-zip'))(data).extractAllTo(process.cwd(), true);
+											else fs.writeFileSync(packagePath, data);
+											alert('LightSynth has been updated to ' + releases[0].tag_name.substr(1) + '\nPlease restart the application.');
+											require('nw.gui').App.quit();
+										});
+									});
+								});
+							}
+						});
+					}
+				});
+			});
+		}
+	};
 });
 
