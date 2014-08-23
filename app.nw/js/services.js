@@ -142,10 +142,16 @@ angular.module('LightSynth.services', [])
 })
 .factory('sequencer', function(synth) {
 	var sequences = JSON.parse(localStorage.getItem('LightSynthSequences') || '[]');
-	!sequences.length && (sequences = [
-		{"name": "Test", "notes": [{"note": 0, "chord": "Major"}, {"note": 9, "chord": "Minor"}]},
-		{"name": "Test 2", "notes": [{"note": 6, "chord": "Maj7"}, {"note": 12, "chord": "Aug7"}]}
-	]);
+	if(sequences.length) {
+		sequences.forEach(function(id, i) {
+			sequences[i] = JSON.parse(localStorage.getItem('LightSynthSequence' + id) || '{}');
+		});
+	} else {
+		sequences = [
+			{"name": "Test", "notes": [{"note": 0, "chord": "Major"}, {"note": 9, "chord": "Minor"}]},
+			{"name": "Test 2", "notes": [{"note": 6, "chord": "Maj7"}, {"note": 12, "chord": "Aug7"}]}
+		];
+	}
 
 	return {
 		note: 0,
@@ -162,6 +168,27 @@ angular.module('LightSynth.services', [])
 				++this.note >= this.sequence.notes.length && (this.note = 0);
 				this.switchingNote = false;
 			}
+		},
+		save: function() {
+			var ids = [];
+			sequences.forEach(function(sequence) {
+				var s = {
+						name: sequence.name + '',
+						notes: []
+					};
+
+				sequence.notes.forEach(function(note) {
+					var n = {};
+					(note.root || note.root === 0) && (n.root = parseInt(note.root, 10));
+					note.scale && (n.scale = note.scale + '');
+					note.chord && (n.chord = note.chord + '');
+					(note.note || note.note === 0) && (n.note = parseInt(note.note, 10));
+					s.notes.push(n);
+				});
+				localStorage.setItem('LightSynthSequence' + s.name, JSON.stringify(s));
+				ids.push(s.name);
+			});
+			localStorage.setItem('LightSynthSequences', JSON.stringify(ids));
 		}
 	};
 })

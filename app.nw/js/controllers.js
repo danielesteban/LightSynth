@@ -98,20 +98,24 @@ angular.module('LightSynth.controllers', [])
 			note: notes[note].note,
 			chord: notes[note].chord
 		});
+		sequencer.save();
 	};
 
 	$scope.editNote = function(index) {
 		sequencer.sequence.notes[sequencer.note].note = index;
+		sequencer.save();
 	};
 
 	$scope.editChord = function(name) {
 		sequencer.sequence.notes[sequencer.note].chord = name;
+		sequencer.save();
 	};
 
 	$scope.removeNote = function() {
 		var notes = sequencer.sequence.notes;
 		notes.splice(sequencer.note--, 1);
 		sequencer.note < 0 && (sequencer.note = 0);
+		sequencer.save();
 	};
 
 	$scope.addSequence = function() {
@@ -124,11 +128,13 @@ angular.module('LightSynth.controllers', [])
 				}
 			]
 		});
+		sequencer.save();
 	};
 
 	$scope.removeSequence = function() {
 		sequencer.sequences.splice(sequencer.sequence--, 1);
 		sequencer.sequence < 0 && (sequencer.sequence = 0);
+		sequencer.save();
 	};
 
 	/* Process serial data */
