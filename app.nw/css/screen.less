@@ -181,7 +181,7 @@ button {
 		.right .bar div {
 			background: darken(#f09, 20%);
 		}
-		.roots, .chords, .scales {
+		.notes, .chords, .list {
 			list-style-type: none;
 			padding: 0;
 			margin: 2px -1px 10px;
@@ -201,7 +201,7 @@ button {
 				}
 			}
 		}
-		.roots, .chords {
+		.notes, .chords {
 			li {
 				display: inline;
 				a {
@@ -220,7 +220,7 @@ button {
 				white-space: nowrap;
 			}
 		}
-		.scales {
+		.list {
 			height: 175px;
 			border: 1px solid #333;
 			overflow-y: scroll;
@@ -241,6 +241,18 @@ button {
 				display: inline-block;
 				padding: 6px 0;
 			}
+		}
+		.third, .buttons {
+			.right {
+				float: right;
+				padding-left: 5px;
+				a {
+					cursor: pointer;
+				}
+			}
+		}
+		.buttons .right {
+			padding-right: 4px;
 		}
 		.tabs {
 			clear: left;

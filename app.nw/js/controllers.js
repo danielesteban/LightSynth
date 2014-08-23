@@ -89,6 +89,48 @@ angular.module('LightSynth.controllers', [])
 		}, 2000);
 	};
 
+	/* Sequencer handlers */
+	$scope.addNote = function() {
+		var notes = sequencer.sequence.notes,
+			note = sequencer.note;
+
+		notes.splice(++sequencer.note, 0, {
+			note: notes[note].note,
+			chord: notes[note].chord
+		});
+	};
+
+	$scope.editNote = function(index) {
+		sequencer.sequence.notes[sequencer.note].note = index;
+	};
+
+	$scope.editChord = function(name) {
+		sequencer.sequence.notes[sequencer.note].chord = name;
+	};
+
+	$scope.removeNote = function() {
+		var notes = sequencer.sequence.notes;
+		notes.splice(sequencer.note--, 1);
+		sequencer.note < 0 && (sequencer.note = 0);
+	};
+
+	$scope.addSequence = function() {
+		sequencer.sequences.splice(++sequencer.sequence, 0, {
+			name: 'New sequence',
+			notes: [
+				{
+					note: 0,
+					chord: 'Note'
+				}
+			]
+		});
+	};
+
+	$scope.removeSequence = function() {
+		sequencer.sequences.splice(sequencer.sequence--, 1);
+		sequencer.sequence < 0 && (sequencer.sequence = 0);
+	};
+
 	/* Process serial data */
 	$scope.avgL = 0;
 	$scope.avgR = 0;
@@ -120,19 +162,30 @@ angular.module('LightSynth.controllers', [])
 	/* Keyboard Handler */
 	var keydownHandler = function(e) {
 			var code = e.keyCode,
-				rootKeys = [81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221],
+				noteKeys = [81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221],
 				chordKeys = [65, 83, 68, 70, 71, 72, 74, 75, 76];
 
-			var root;
-			if((root = rootKeys.indexOf(code)) !== -1) {
-				$scope.$apply(function() {
-					synth.root = synth.roots[root];
-				});
+			var note;
+			if((note = noteKeys.indexOf(code)) !== -1) {
+				document.querySelectorAll('.notes a')[note].click();
 			}
 			
 			var chord;
 			if((chord = chordKeys.indexOf(code)) !== -1) {
 				document.querySelectorAll('.chords a')[chord].click();
+			}
+
+			var list = document.querySelectorAll('.list li'),
+				active = document.querySelector('.list .active'),
+				index = Array.prototype.indexOf.call(active.parentNode.children, active);
+
+			switch(code) {
+				case 38:
+					--index >= 0 && list[index].firstChild.click();
+				break;
+				case 40:
+					++index < list.length && list[index].firstChild.click();
+				break;
 			}
 		};
 

@@ -141,9 +141,11 @@ angular.module('LightSynth.services', [])
 	};
 })
 .factory('sequencer', function(synth) {
-	var sequences = JSON.parse(localStorage.getItem('LightSynthSequences') || '[{"name": "Test", "notes": [{"note": 0, "chord": "Major"}, {"note": 9, "chord": "Minor"}]}]');
-
-	sequences.push({"name": "Test 2", "notes": [{"note": 6, "chord": "Maj7"}, {"note": 12, "chord": "Aug7"}]});
+	var sequences = JSON.parse(localStorage.getItem('LightSynthSequences') || '[]');
+	!sequences.length && (sequences = [
+		{"name": "Test", "notes": [{"note": 0, "chord": "Major"}, {"note": 9, "chord": "Minor"}]},
+		{"name": "Test 2", "notes": [{"note": 6, "chord": "Maj7"}, {"note": 12, "chord": "Aug7"}]}
+	]);
 
 	return {
 		note: 0,
