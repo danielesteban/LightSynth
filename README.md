@@ -22,5 +22,17 @@ Enjoy! ;P
 
 ![Main View](https://raw.githubusercontent.com/danielesteban/LightSynth/master/screenshots/main.png)
 
+## If you see this message...
+
+![Gatekeeper error](https://raw.githubusercontent.com/danielesteban/LightSynth/master/screenshots/gatekeeper1.png)
+
+Right click on the app icon and select **open** from the contextual menu:
+
+![App contextual menu](https://raw.githubusercontent.com/danielesteban/LightSynth/master/screenshots/gatekeeper2.png)
+
+Finally, select **open** when this dialog appears:
+
+![Gatekeeper dialog](https://raw.githubusercontent.com/danielesteban/LightSynth/master/screenshots/gatekeeper3.png)
+
 ## License
 This code uses the MIT license, see the `LICENSE` file.
