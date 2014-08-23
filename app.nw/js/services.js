@@ -119,8 +119,8 @@ angular.module('LightSynth.services', [])
 		chord: chords['Note'],
 		rootOctave: 3,
 		numOctaves: 1,
-		setNote: function(percent, velocity) {
-			var note = Math.round(percent * (this.scale.length * parseInt(this.numOctaves, 10)) / 100),
+		setNote: function(percent, note, velocity) {
+			var note = note || Math.round(percent * (this.scale.length * parseInt(this.numOctaves, 10)) / 100),
 				octave = parseInt(this.rootOctave, 10) + Math.floor(note / this.scale.length),
 				midiNote = 12 + this.root.offset + (octave * 12) + this.scale[note % this.scale.length];
 
@@ -137,6 +137,25 @@ angular.module('LightSynth.services', [])
 			var volume = Math.round(percent * 127 / 100);
 			if(this.volume === volume) return;
 			midi.sendMessage([176, 7, this.volume = volume]);
+		}
+	};
+})
+.factory('sequencer', function(synth) {
+	var sequences = JSON.parse(localStorage.getItem('LightSynthSequences') || '[{"title": "Test", "notes": [{"root": 0, "chord": "Major"}, {"root": 9, "chord": "Minor"}]}]');
+	return {
+		note: 0,
+		sequence: sequences[0],
+		switchingNote: false,
+		setNote: function(percent) {
+			if(!this.switchingNote && percent <= 40) this.switchingNote = true;
+			else if(this.switchingNote && percent >= 60) {
+				synth.root = synth.roots[this.sequence.notes[this.note].root || 0];
+				synth.scale = synth.scales[this.sequence.notes[this.note].scale || 'All Notes'];
+				synth.chord = synth.chords[this.sequence.notes[this.note].chord || 'Note'];
+				synth.setNote(false, this.sequence.notes[this.note].note || 0);
+				++this.note >= this.sequence.notes.length && (this.note = 0);
+				this.switchingNote = false;
+			}
 		}
 	};
 })

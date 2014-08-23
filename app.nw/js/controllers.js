@@ -23,7 +23,7 @@ angular.module('LightSynth.controllers', [])
 	};
 	list();
 })
-.controller('main', function($scope, $location, $timeout, $window, synth, serialport) {
+.controller('main', function($scope, $location, $timeout, $window, synth, sequencer, serialport) {
 	if(!serialport.serialport) return $location.path('/');
 	/* Calibration stuff */
 	var minValues = JSON.parse(localStorage.getItem('LightSynthMinValues') || '[140, 140, 140, 140]'),
@@ -96,6 +96,7 @@ angular.module('LightSynth.controllers', [])
 	$scope.synth = synth;
 	$scope.invertL = true;
 	$scope.invertR = true;
+	$scope.mode = 'sequencer';
 	serialport.onData = function(data) {
 		if(calibrating !== 0) return calibration(data);
 		data.value = Math.min(maxValues[data.photoResistor], Math.max(minValues[data.photoResistor], data.value)) - minValues[data.photoResistor];
@@ -104,7 +105,8 @@ angular.module('LightSynth.controllers', [])
 			if(data.photoResistor < 2) {
 				$scope.invertL && (data.value = 100 - data.value);
 				$scope.avgL = ($scope.percents[0] + $scope.percents[1]) / 2;
-				synth.setNote($scope.avgL);
+				if($scope.mode === 'sequencer') sequencer.setNote($scope.avgL);
+				else synth.setNote($scope.avgL);
 			} else {
 				$scope.invertR && (data.value = 100 - data.value);
 				$scope.avgR = ($scope.percents[2] + $scope.percents[3]) / 2;
