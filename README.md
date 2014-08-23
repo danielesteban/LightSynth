@@ -22,7 +22,7 @@ Enjoy! ;P
 
 ![Main View](https://raw.githubusercontent.com/danielesteban/LightSynth/master/screenshots/main.png)
 
-## If you see this message...
+## If you see this error...
 
 ![Gatekeeper error](https://raw.githubusercontent.com/danielesteban/LightSynth/master/screenshots/gatekeeper1.png)
 

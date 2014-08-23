@@ -179,26 +179,26 @@ angular.module('LightSynth.services', [])
 					} catch(e) {
 						return;
 					}
-					if(versionCompare(self.currentVersion, releases[0].tag_name.substr(1)) < 0) {
-						releases[0].assets.forEach(function(asset) {
-							if(asset.name === 'LightSynth-' + process.platform + '.nw') {
-								https.get(asset.browser_download_url, function(res) {
-									https.get(res.headers.location, function(res) {
-										var data;
-										res.on('data', function(chunk) {
-											data = data ? Buffer.concat([data, chunk]) : chunk;
-										});
-										res.on('end', function() {
-											if(process.platform === 'darwin') new (require('adm-zip'))(data).extractAllTo(process.cwd(), true);
-											else fs.writeFileSync(packagePath, data);
-											alert('LightSynth has been updated to ' + releases[0].tag_name.substr(1) + '\nPlease restart the application.');
-											require('nw.gui').App.quit();
-										});
+					var release = releases[0];
+					if(!release || versionCompare(self.currentVersion, release.tag_name.substr(1)) >= 0) return;
+					release.assets.forEach(function(asset) {
+						if(asset.name === 'LightSynth-' + process.platform + '.nw') {
+							https.get(asset.browser_download_url, function(res) {
+								https.get(res.headers.location, function(res) {
+									var data;
+									res.on('data', function(chunk) {
+										data = data ? Buffer.concat([data, chunk]) : chunk;
+									});
+									res.on('end', function() {
+										if(process.platform === 'darwin') new (require('adm-zip'))(data).extractAllTo(process.cwd(), true);
+										else fs.writeFileSync(packagePath, data);
+										alert('LightSynth has been updated to ' + release.tag_name + '\nPlease restart the application.');
+										require('nw.gui').App.quit();
 									});
 								});
-							}
-						});
-					}
+							});
+						}
+					});
 				});
 			});
 		}
