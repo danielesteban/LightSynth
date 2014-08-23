@@ -161,7 +161,7 @@ angular.module('LightSynth.services', [])
 		};
 
 	return {
-		currentVersion: JSON.parse(fs.readFileSync(require('path').join(process.cwd(), 'package.json'))).version,
+		currentVersion: JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'))).version,
 		run: function() {
 			var self = this;
 			https.get({
@@ -191,8 +191,11 @@ angular.module('LightSynth.services', [])
 										data = data ? Buffer.concat([data, chunk]) : chunk;
 									});
 									res.on('end', function() {
-										if(process.platform === 'darwin') new (require('adm-zip'))(data).extractAllTo(process.cwd(), true);
-										else fs.writeFileSync(packagePath, data);
+										if(process.platform === 'darwin') {
+											new (require('adm-zip'))(data).extractAllTo(process.cwd(), true);
+											var plist = path.join(process.cwd(), '..', '..', 'Info.plist');
+											fs.writeFileSync(plist, fs.readFileSync(plist, 'utf-8').replace(/<key>CFBundleShortVersionString<\/key>\n\t<string>((.*)\.(.*)\.(.*))<\/string>/, '<key>CFBundleShortVersionString<\/key>\n\t<string>' + release.tag_name.substr(1) + '<\/string>'));
+										} else fs.writeFileSync(packagePath, data);
 										alert('LightSynth has been updated to ' + release.tag_name + '\nPlease restart the application.');
 										require('nw.gui').App.quit();
 									});
@@ -205,4 +208,3 @@ angular.module('LightSynth.services', [])
 		}
 	};
 });
-
