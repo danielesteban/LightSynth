@@ -63,15 +63,16 @@ angular.module('LightSynth.services', [])
 	var midi = new (require('midi')).output(),
 		roots = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
 		chords = {
-			'Single Note': [0],
-			'Octave': [0, 12],
-			'Power Chord': [0, 7, 12],
+			'Note': [0],
+			'Eighth': [0, 12],
+			'Fifth': [0, 7, 12],
 			'Major': [0, 4, 7],
 			'Minor': [0, 3, 7],
 			'Maj7': [0, 4, 7, 11],
 			'Min7': [0, 3, 7, 10],
 			'Maj9': [0, 4, 7, 11, 14],
-			'Min9': [0, 3, 7, 10, 14]
+			'Aug7': [0, 4, 8, 10],
+			'Dim7': [0, 3, 6, 9]
 		},
 		scales = {
 			'All Notes': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -115,7 +116,7 @@ angular.module('LightSynth.services', [])
 		scales: scales,
 		scale: scales['All Notes'],
 		chords: chords,
-		chord: chords['Single Note'],
+		chord: chords['Note'],
 		rootOctave: 3,
 		numOctaves: 1,
 		setNote: function(percent, velocity) {

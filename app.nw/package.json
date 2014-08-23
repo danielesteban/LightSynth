@@ -12,7 +12,8 @@
 		"title": "LightSynth",
 		"width": 640,
 		"height": 480,
-		"toolbar": false 
+		"toolbar": false,
+		"resizable": false
 	},
 	"webkit": {
 		"plugin": true

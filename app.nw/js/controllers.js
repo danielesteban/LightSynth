@@ -68,8 +68,8 @@ angular.module('LightSynth.controllers', [])
 					$scope.$apply(function() {
 						delete $scope.calibrating;	
 					});
-					//localStorage.setItem('LightSynthMinValues', JSON.stringify(minValues));
-					//localStorage.setItem('LightSynthMaxValues', JSON.stringify(maxValues));
+					localStorage.setItem('LightSynthMinValues', JSON.stringify(minValues));
+					localStorage.setItem('LightSynthMaxValues', JSON.stringify(maxValues));
 				}
 			}
 		};
@@ -99,28 +99,37 @@ angular.module('LightSynth.controllers', [])
 	serialport.onData = function(data) {
 		if(calibrating !== 0) return calibration(data);
 		data.value = Math.min(maxValues[data.photoResistor], Math.max(minValues[data.photoResistor], data.value)) - minValues[data.photoResistor];
+		data.value = data.value * 100 / (maxValues[data.photoResistor] - minValues[data.photoResistor]);	
 		$scope.$apply(function() {
-			$scope.percents[data.photoResistor] = data.value * 100 / (maxValues[data.photoResistor] - minValues[data.photoResistor]);	
 			if(data.photoResistor < 2) {
+				$scope.invertL && (data.value = 100 - data.value);
 				$scope.avgL = ($scope.percents[0] + $scope.percents[1]) / 2;
-				synth.setNote($scope.invertL ? 100 - $scope.avgL : $scope.avgL, 100);
+				synth.setNote($scope.avgL);
 			} else {
+				$scope.invertR && (data.value = 100 - data.value);
 				$scope.avgR = ($scope.percents[2] + $scope.percents[3]) / 2;
-				synth.setVolume($scope.invertR ? 100 - $scope.avgR : $scope.avgR);
+				synth.setVolume($scope.avgR);
 			}
+			$scope.percents[data.photoResistor] = data.value;
 		});
 	};
 	
 	/* Keyboard Handler */
 	var keydownHandler = function(e) {
-			var code = e.keyCode;
-			if((code >= 48 && code <= 57) || code === 189 || code === 187) {
-				code === 48 && (code = 58);
-				code === 189 && (code = 59);
-				code === 187 && (code = 60);
+			var code = e.keyCode,
+				rootKeys = [81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221],
+				chordKeys = [65, 83, 68, 70, 71, 72, 74, 75, 76];
+
+			var root;
+			if((root = rootKeys.indexOf(code)) !== -1) {
 				$scope.$apply(function() {
-					synth.root = synth.roots[code - 49];
+					synth.root = synth.roots[root];
 				});
+			}
+			
+			var chord;
+			if((chord = chordKeys.indexOf(code)) !== -1) {
+				document.querySelectorAll('.chords a')[chord].click();
 			}
 		};
 

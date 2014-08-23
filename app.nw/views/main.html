@@ -4,43 +4,68 @@
 	</h1>
 	<div class="row clearfix">
 		<div class="half">
-			Top: {{percents[0].toFixed(2)}}%
-			<div class="bar" data-ng-style="{width:percents[0] + '%'}"></div>
-			Bottom: {{percents[1].toFixed(2)}}%
-			<div class="bar" data-ng-style="{width:percents[1] + '%'}"></div>
+			<div class="row clearfix">
+				<div class="half">
+					Top: {{percents[0].toFixed(2)}}%
+					<div class="bar"><div data-ng-style="{width:percents[0] + '%'}"></div></div>
+				</div>
+				<div class="half">
+					Bottom: {{percents[1].toFixed(2)}}%
+					<div class="bar"><div data-ng-style="{width:percents[1] + '%'}"></div></div>
+				</div>
+			</div>
 			AVG: {{avgL.toFixed(2)}}%
-			<div class="bar" data-ng-style="{width:avgL + '%'}"></div>
+			<div class="bar"><div data-ng-style="{width:avgL + '%'}"></div></div>
 		</div>
-		<div class="half">
-			Top: {{percents[2].toFixed(2)}}%
-			<div class="bar" data-ng-style="{width:percents[2] + '%'}"></div>
-			Bottom: {{percents[3].toFixed(2)}}%
-			<div class="bar" data-ng-style="{width:percents[3] + '%'}"></div>
+		<div class="half right">
+			<div class="row clearfix">
+				<div class="half">
+					Top: {{percents[2].toFixed(2)}}%
+					<div class="bar"><div data-ng-style="{width:percents[2] + '%'}"></div></div>
+				</div>
+				<div class="half">
+					Bottom: {{percents[3].toFixed(2)}}%
+					<div class="bar"><div data-ng-style="{width:percents[3] + '%'}"></div></div>
+				</div>
+			</div>
 			AVG: {{avgR.toFixed(2)}}%
-			<div class="bar" data-ng-style="{width:avgR + '%'}"></div>
+			<div class="bar"><div data-ng-style="{width:avgR + '%'}"></div></div>
 		</div>
 	</div>
 	<div class="row clearfix">
-		<div class="third">
+		<div class="buttons">
 			Root:<br>
-			<select data-ng-model="synth.root" data-ng-options="root.name for root in synth.roots"></select><br>
-			Scale:<br>
-			<select data-ng-model="synth.scale" data-ng-options="key for (key, scale) in synth.scales"></select><br>
+			<ul class="roots clearfix">
+				<li data-ng-repeat="root in synth.roots" data-ng-class="{active: synth.root === root}"><a data-ng-click="synth.root = root">{{root.name}}</a></li>
+			</ul>
 			Chord:<br>
-			<select data-ng-model="synth.chord" data-ng-options="key for (key, scale) in synth.chords"></select>
+			<ul class="chords clearfix">
+				<li data-ng-repeat="(name, chord) in synth.chords" data-ng-class="{active: synth.chord === chord}"><a data-ng-click="synth.chord = chord">{{name}}</a></li>
+			</ul>
 		</div>
 		<div class="third">
+			Scale:<br>
+			<ul class="scales">
+				<li data-ng-repeat="(name, scale) in synth.scales" data-ng-class="{active: synth.scale === scale}"><a data-ng-click="synth.scale = scale">{{name}}</a></li>
+			</ul>
+		</div>
+		<div class="sliders">
 			Root octave: {{synth.rootOctave}}<br>
 			<input data-ng-model="synth.rootOctave" type="range" step="1" min="1" max="6"><br>
 			Num octaves: {{synth.numOctaves}}<br>
-			<input data-ng-model="synth.numOctaves" type="range" step="1" min="1" max="4">
-			<br><br>
-			<label>Invert L: <input data-ng-model="invertL" type="checkbox"></label>
-			<label>Invert R: <input data-ng-model="invertR" type="checkbox"></label>
-		</div>
-		<div class="third center">
-			<br><br><button data-ng-click="calibrate()">Calibrate</button><br><br>
-			{{calibrating}}
+			<input data-ng-model="synth.numOctaves" type="range" step="1" min="1" max="4"><br>
+			<div class="row clearfix mt">
+				<div class="half">
+					<label><input data-ng-model="invertL" type="checkbox"> Invert L</label>
+				</div>
+				<div class="half">
+					<label><input data-ng-model="invertR" type="checkbox"> Invert R</label>
+				</div>
+			</div>
+			<div class="calibration">
+				<button data-ng-hide="calibrating" data-ng-click="calibrate()">Calibrate</button>
+				<span>{{calibrating}}</span>
+			</div>
 		</div>
 	</div>
 </div>
