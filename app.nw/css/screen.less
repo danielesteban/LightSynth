@@ -242,6 +242,37 @@ button {
 				padding: 6px 0;
 			}
 		}
+		.tabs {
+			clear: left;
+			display: block;
+			width: 64.7%;
+			border-top: 1px solid #333;
+			list-style-type: none;
+			margin: 0 15px;
+			padding: 0;
+			li {
+				float: left;
+				a {
+					position: relative;
+					top: -1px;
+					display: block;
+					padding: 6px 12px;
+					border-radius: 0 0 4px 4px;
+					background: darken(#1a1a1a, 20%);
+					color: #fff;
+					text-align: center;
+					box-shadow: 0 1px 5px rgba(0, 0, 0, .5);
+					cursor: pointer;
+					border: 1px solid #333;
+					margin-left: 2px;
+					transition: all .15s ease;
+				}
+				&.active a {
+					background: #1a1a1a;
+					border-top: 0;
+				}
+			}
+		}
 		input, select {
 			width: 100%;
 			margin-top: 2px;

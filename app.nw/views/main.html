@@ -33,21 +33,41 @@
 		</div>
 	</div>
 	<div class="row clearfix">
-		<div class="buttons">
-			Root:<br>
-			<ul class="roots clearfix">
-				<li data-ng-repeat="root in synth.roots" data-ng-class="{active: synth.root === root}"><a data-ng-click="synth.root = root">{{root.name}}</a></li>
-			</ul>
-			Chord:<br>
-			<ul class="chords clearfix">
-				<li data-ng-repeat="(name, chord) in synth.chords" data-ng-class="{active: synth.chord === chord}"><a data-ng-click="synth.chord = chord">{{name}}</a></li>
-			</ul>
+		<div data-ng-if="mode === 'synth'">
+			<div class="buttons">
+				Root:<br>
+				<ul class="roots clearfix">
+					<li data-ng-repeat="root in synth.roots" data-ng-class="{active: synth.root === root}"><a data-ng-click="synth.root = root">{{root.name}}</a></li>
+				</ul>
+				Chord:<br>
+				<ul class="chords clearfix">
+					<li data-ng-repeat="(name, chord) in synth.chords" data-ng-class="{active: synth.chord === chord}"><a data-ng-click="synth.chord = chord">{{name}}</a></li>
+				</ul>
+			</div>
+			<div class="third">
+				Scale:<br>
+				<ul class="scales">
+					<li data-ng-repeat="(name, scale) in synth.scales" data-ng-class="{active: synth.scale === scale}"><a data-ng-click="synth.scale = scale">{{name}}</a></li>
+				</ul>
+			</div>
 		</div>
-		<div class="third">
-			Scale:<br>
-			<ul class="scales">
-				<li data-ng-repeat="(name, scale) in synth.scales" data-ng-class="{active: synth.scale === scale}"><a data-ng-click="synth.scale = scale">{{name}}</a></li>
-			</ul>
+		<div data-ng-if="mode === 'sequencer'">
+			<div class="buttons">
+				Note:<br>
+				<ul class="roots clearfix">
+					<li data-ng-repeat="note in synth.roots" data-ng-class="{active: sequencer.sequence.notes[sequencer.note].note === $index}"><a data-ng-click="">{{note.name}}</a></li>
+				</ul>
+				Chord:<br>
+				<ul class="chords clearfix">
+					<li data-ng-repeat="(name, chord) in synth.chords" data-ng-class="{active: sequencer.sequence.notes[sequencer.note].chord === name}"><a data-ng-click="">{{name}}</a></li>
+				</ul>
+			</div>
+			<div class="third">
+				Sequences:<br>
+				<ul class="scales">
+					<li data-ng-repeat="sequence in sequencer.sequences" data-ng-class="{active: sequencer.sequence === sequence}"><a data-ng-click="sequencer.sequence = sequence; sequencer.note = 0">{{sequence.name}}</a></li>
+				</ul>
+			</div>
 		</div>
 		<div class="sliders">
 			Root octave: {{synth.rootOctave}}<br>
@@ -67,5 +87,9 @@
 				<span>{{calibrating}}</span>
 			</div>
 		</div>
+		<ul class="tabs clearfix">
+			<li data-ng-class="{active: mode === 'synth'}"><a data-ng-click="mode = 'synth'">Synth</a></li>
+			<li data-ng-class="{active: mode === 'sequencer'}"><a data-ng-click="mode = 'sequencer'">Sequencer</a></li>
+		</ul>
 	</div>
 </div>

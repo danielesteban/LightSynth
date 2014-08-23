@@ -141,9 +141,13 @@ angular.module('LightSynth.services', [])
 	};
 })
 .factory('sequencer', function(synth) {
-	var sequences = JSON.parse(localStorage.getItem('LightSynthSequences') || '[{"title": "Test", "notes": [{"root": 0, "chord": "Major"}, {"root": 9, "chord": "Minor"}]}]');
+	var sequences = JSON.parse(localStorage.getItem('LightSynthSequences') || '[{"name": "Test", "notes": [{"note": 0, "chord": "Major"}, {"note": 9, "chord": "Minor"}]}]');
+
+	sequences.push({"name": "Test 2", "notes": [{"note": 6, "chord": "Maj7"}, {"note": 12, "chord": "Aug7"}]});
+
 	return {
 		note: 0,
+		sequences: sequences,
 		sequence: sequences[0],
 		switchingNote: false,
 		setNote: function(percent) {

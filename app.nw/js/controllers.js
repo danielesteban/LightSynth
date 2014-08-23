@@ -94,9 +94,10 @@ angular.module('LightSynth.controllers', [])
 	$scope.avgR = 0;
 	$scope.percents = {0: 0, 1: 0, 2: 0, 3: 0};
 	$scope.synth = synth;
+	$scope.sequencer = sequencer;
 	$scope.invertL = true;
 	$scope.invertR = true;
-	$scope.mode = 'sequencer';
+	$scope.mode = 'synth';
 	serialport.onData = function(data) {
 		if(calibrating !== 0) return calibration(data);
 		data.value = Math.min(maxValues[data.photoResistor], Math.max(minValues[data.photoResistor], data.value)) - minValues[data.photoResistor];
