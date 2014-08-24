@@ -179,6 +179,12 @@ angular.module('LightSynth.services', [])
 				this.note < 0 && (this.note = 0);
 				this.saveSequence();
 			},
+			prevNote: function() {
+				--this.note < 0 && (this.note = this.sequence.notes.length - 1);
+			},
+			nextNote: function() {
+				++this.note >= this.sequence.notes.length && (this.note = 0);
+			},
 			addSequence: function() {
 				this.sequences.unshift(this.sequence = {
 					id: new Date() * 1,

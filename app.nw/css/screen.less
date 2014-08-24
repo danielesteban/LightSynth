@@ -161,9 +161,6 @@ button {
 			}
 			.row {
 				margin: 0 -15px;
-				&.mt {
-					margin-top: 5px;
-				}
 			}
 		}
 		.bar {
@@ -285,18 +282,21 @@ button {
 				}
 			}
 		}
-		input, select {
+		.sliders {
+			label {
+				display: inline-block;
+				margin-right: 5px;
+			}
+		}
+		input {
 			width: 100%;
 			margin-top: 2px;
-			margin-bottom: 5px;
+			margin-bottom: 10px;
 			cursor: pointer;
 			color: #333;
-			&[type="range"] {
-				margin-bottom: 6px;
-			}
-			&[type="checkbox"] {
+			&[type="checkbox"], &[type="radio"] {
 				width: auto;
-				margin: 0 5px 0 0;
+				margin-right: 5px;
 			}
 		}
 	}

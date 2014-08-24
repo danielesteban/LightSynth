@@ -59,7 +59,9 @@
 						<span data-ng-if="sequencer.sequence.notes.length > 1">
 							<a data-ng-click="sequencer.removeNote()">×</a> &nbsp;&nbsp;
 						</span>
-						[{{sequencer.note + 1}} / {{sequencer.sequence.notes.length}}]
+						<a data-ng-click="sequencer.prevNote()">&lt;</a>&nbsp;
+						[{{sequencer.note + 1}} / {{sequencer.sequence.notes.length}}]&nbsp;
+						<a data-ng-click="sequencer.nextNote()">&gt;</a>
 					</span>
 					Note:
 				</div>
@@ -90,17 +92,27 @@
 			</div>
 		</div>
 		<div class="sliders">
-			Root octave: {{synth.rootOctave}}<br>
-			<input data-ng-model="synth.rootOctave" type="range" step="1" min="1" max="6"><br>
-			Num octaves: {{synth.numOctaves}}<br>
-			<input data-ng-model="synth.numOctaves" type="range" step="1" min="1" max="4"><br>
-			<div class="row clearfix mt">
+			<div class="row clearfix">
 				<div class="half">
-					<label><input data-ng-model="invertL" type="checkbox"> Invert L</label>
+					Octave: {{synth.rootOctave}}<br>
+					<input data-ng-model="synth.rootOctave" type="range" step="1" min="1" max="6">
 				</div>
 				<div class="half">
-					<label><input data-ng-model="invertR" type="checkbox"> Invert R</label>
+					Range: {{synth.numOctaves}}<br>
+					<input data-ng-model="synth.numOctaves" type="range" step="1" min="1" max="4">
 				</div>
+			</div>
+			<div>
+				Left axis:<br>
+				<label><input data-ng-model="modeL" type="radio" value="pitch"> Pitch</label>
+				<label><input data-ng-model="modeL" type="radio" value="volume"> Gain</label>
+				<label><input data-ng-model="invertL" type="checkbox"> Invert</label>
+			</div>
+			<div>
+				Right axis:<br>
+				<label><input data-ng-model="modeR" type="radio" value="pitch"> Pitch</label>
+				<label><input data-ng-model="modeR" type="radio" value="volume"> Gain</label>
+				<label><input data-ng-model="invertR" type="checkbox"> Invert</label>
 			</div>
 			<div class="calibration">
 				<button data-ng-hide="calibrating" data-ng-click="calibrate()">Calibrate</button>

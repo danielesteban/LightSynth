@@ -95,6 +95,8 @@ angular.module('LightSynth.controllers', [])
 	$scope.percents = {0: 0, 1: 0, 2: 0, 3: 0};
 	$scope.synth = synth;
 	$scope.sequencer = sequencer;
+	$scope.modeL = 'pitch';
+	$scope.modeR = 'volume';
 	$scope.invertL = true;
 	$scope.invertR = true;
 	$scope.mode = 'synth';
@@ -103,20 +105,37 @@ angular.module('LightSynth.controllers', [])
 		data.value = Math.min(maxValues[data.photoResistor], Math.max(minValues[data.photoResistor], data.value)) - minValues[data.photoResistor];
 		data.value = data.value * 100 / (maxValues[data.photoResistor] - minValues[data.photoResistor]);	
 		$scope.$apply(function() {
+			var action, percent;
 			if(data.photoResistor < 2) {
+				action = $scope.modeL;
 				$scope.invertL && (data.value = 100 - data.value);
-				$scope.avgL = ($scope.percents[0] + $scope.percents[1]) / 2;
-				if($scope.mode === 'sequencer') sequencer.setNote($scope.avgL);
-				else synth.setNote($scope.avgL);
+				percent = $scope.avgL = ($scope.percents[0] + $scope.percents[1]) / 2;
 			} else {
+				action = $scope.modeR;
 				$scope.invertR && (data.value = 100 - data.value);
-				$scope.avgR = ($scope.percents[2] + $scope.percents[3]) / 2;
-				synth.setVolume($scope.avgR);
+				percent = $scope.avgR = ($scope.percents[2] + $scope.percents[3]) / 2;
+			}
+			switch(action) {
+				case 'pitch':
+					if($scope.mode === 'sequencer') sequencer.setNote(percent);
+					else synth.setNote(percent);
+				break;
+				case 'volume':
+					synth.setVolume(percent);
+				break;
 			}
 			$scope.percents[data.photoResistor] = data.value;
 		});
 	};
-	
+
+	/* Axis modes handlers */
+	$scope.$watch('modeL', function(current, prev) {
+		$scope.modeR === current && ($scope.modeR = prev);
+	});
+	$scope.$watch('modeR', function(current, prev) {
+		$scope.modeL === current && ($scope.modeL = prev);
+	});
+
 	/* Keyboard Handler */
 	var keydownHandler = function(e) {
 			if(e.target.tagName.toLowerCase() === 'input') return;
