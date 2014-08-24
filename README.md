@@ -25,13 +25,15 @@ These are two photoresistors for each hand. The left hand controls the pitch & t
 Enjoy! ;P
 
 ## Downloads
-**v1.0.2:** (Aug 22, 2014)
+**v1.1.0:** (Aug 24, 2014)
 
- * Mac: [32bit, 10.7+](https://github.com/danielesteban/LightSynth/releases/download/v1.0.2/LightSynth-darwin.dmg)
+ * Mac: [32bit, 10.7+](https://github.com/danielesteban/LightSynth/releases/download/v1.1.0/LightSynth-darwin.dmg)
 
 ![Connect View](https://raw.githubusercontent.com/danielesteban/LightSynth/master/screenshots/connect.png)
 
-![Main View](https://raw.githubusercontent.com/danielesteban/LightSynth/master/screenshots/main.png)
+![Synth View](https://raw.githubusercontent.com/danielesteban/LightSynth/master/screenshots/synth.png)
+
+![Sequencer View](https://raw.githubusercontent.com/danielesteban/LightSynth/master/screenshots/sequencer.png)
 
 ## If you see this error...
 
