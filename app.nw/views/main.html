@@ -106,13 +106,17 @@
 				Left axis:<br>
 				<label><input data-ng-model="modeL" type="radio" value="pitch"> Pitch</label>
 				<label><input data-ng-model="modeL" type="radio" value="volume"> Gain</label>
-				<label><input data-ng-model="invertL" type="checkbox"> Invert</label>
+				<label><input data-ng-model="modeL" type="radio" value="cutoff"> Cut-off</label>
+				<label><input data-ng-model="modeL" type="radio" value="stroke"> Stroke</label>
+				<label><input data-ng-model="invertL" type="checkbox"> Inverted</label>
 			</div>
 			<div>
 				Right axis:<br>
 				<label><input data-ng-model="modeR" type="radio" value="pitch"> Pitch</label>
 				<label><input data-ng-model="modeR" type="radio" value="volume"> Gain</label>
-				<label><input data-ng-model="invertR" type="checkbox"> Invert</label>
+				<label><input data-ng-model="modeR" type="radio" value="cutoff"> Cut-off</label>
+				<label><input data-ng-model="modeR" type="radio" value="stroke"> Stroke</label>
+				<label><input data-ng-model="invertR" type="checkbox"> Inverted</label>
 			</div>
 			<div class="calibration">
 				<button data-ng-hide="calibrating" data-ng-click="calibrate()">Calibrate</button>

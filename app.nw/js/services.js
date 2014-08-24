@@ -59,7 +59,7 @@ angular.module('LightSynth.services', [])
 		}
 	};
 })
-.factory('synth', function() {
+.factory('synth', function($interval) {
 	var midi = new (require('midi')).output(),
 		roots = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
 		chords = {
@@ -90,7 +90,14 @@ angular.module('LightSynth.services', [])
 			'Altered': [1, 2, 1, 2, 2, 2],
 			'Arabic': [1, 2, 2, 2, 1, 3]
 		},
-		notesOn = {};
+		notesOn = {},
+		cutoff = {
+			min: 10,
+			max: 300,
+			interval: 300,
+			on: false,
+			lastTick: new Date() * 1
+		};
 
 	roots.forEach(function(root, i) {
 		roots[i] = {
@@ -108,6 +115,17 @@ angular.module('LightSynth.services', [])
 	}
 
 	midi.openVirtualPort('LightSynth');
+	
+	$interval(function() {
+		var now = new Date() * 1;
+		if(cutoff.interval >= cutoff.max || now - cutoff.lastTick < cutoff.interval) return;
+		cutoff.lastTick = now;
+		for(var i in notesOn) {
+			midi.sendMessage([cutoff.on ? 128 : 144, i, notesOn[i]]);
+		}
+		cutoff.on = !cutoff.on;
+	}, cutoff.min / 2);
+	
 	return {
 		note: 0,
 		volume: 100,
@@ -119,6 +137,8 @@ angular.module('LightSynth.services', [])
 		chord: chords['Note'],
 		rootOctave: 3,
 		numOctaves: 1,
+		strokingNote: false,
+		cutoff: cutoff,
 		setNote: function(percent, note, velocity) {
 			var note = note || Math.round(percent * (this.scale.length * parseInt(this.numOctaves, 10)) / 100),
 				octave = parseInt(this.rootOctave, 10) + Math.floor(note / this.scale.length),
@@ -126,10 +146,10 @@ angular.module('LightSynth.services', [])
 
 			if(this.note === midiNote) return;
 			this.note = midiNote;
-			for(var i in notesOn) midi.sendMessage([128, i, 0]);
+			for(var i in notesOn) midi.sendMessage([128, i, notesOn[i]]);
 			notesOn = {};
 			this.chord.forEach(function(interval) {
-				notesOn[midiNote + interval] = true;
+				notesOn[midiNote + interval] = velocity || 127;
 				midi.sendMessage([144, midiNote + interval, velocity || 127]);
 			});
 		},
@@ -137,6 +157,19 @@ angular.module('LightSynth.services', [])
 			var volume = Math.round(percent * 127 / 100);
 			if(this.volume === volume) return;
 			midi.sendMessage([176, 7, this.volume = volume]);
+		},
+		setCutoff: function(percent) {
+			cutoff.interval = (percent * (cutoff.max - cutoff.min) / 100) + cutoff.min;
+		},
+		strokeNote: function(percent) {
+			if(!this.strokingNote && percent <= 45) this.strokingNote = true;
+			else if(this.strokingNote && percent >= 55) {
+				for(var i in notesOn) {
+					midi.sendMessage([128, i, notesOn[i]]);
+					midi.sendMessage([144, i, notesOn[i]]);
+				}
+				this.strokingNote = false;
+			}
 		}
 	};
 })
@@ -146,8 +179,8 @@ angular.module('LightSynth.services', [])
 			sequences: JSON.parse(localStorage.getItem('LightSynthSequences') || '[]'),
 			switchingNote: false,
 			setNote: function(percent) {
-				if(!this.switchingNote && percent <= 40) this.switchingNote = true;
-				else if(this.switchingNote && percent >= 60) {
+				if(!this.switchingNote && percent <= 45) this.switchingNote = true;
+				else if(this.switchingNote && percent >= 55) {
 					synth.root = synth.roots[this.sequence.notes[this.note].root || 0];
 					synth.scale = synth.scales[this.sequence.notes[this.note].scale || 'All Notes'];
 					synth.chord = synth.chords[this.sequence.notes[this.note].chord || 'Note'];

@@ -35,42 +35,41 @@ angular.module('LightSynth.controllers', [])
 		calibration = function(data) {
 			calibrationData.sums[data.photoResistor] += data.value;
 			calibrationData.counts[data.photoResistor]++;
-			if((new Date() * 1) - calibrationStart >= 3000) {
-				if(calibrating === 1) {
-					minValues = [
-						parseFloat((calibrationData.sums[0] / calibrationData.counts[0]).toFixed(2)),
-						parseFloat((calibrationData.sums[1] / calibrationData.counts[1]).toFixed(2)),
-						parseFloat((calibrationData.sums[2] / calibrationData.counts[2]).toFixed(2)),
-						parseFloat((calibrationData.sums[3] / calibrationData.counts[3]).toFixed(2))
-					];
-					calibrating = 0;
-					$scope.$apply(function() {
-						$scope.calibrating = 'Prepare to calibrate high end...';	
-					});
-					$timeout.cancel(calibrationTimeout);
-					calibrationTimeout = $timeout(function() {
-						calibrating = 2;
-						calibrationStart = new Date() * 1;
-						calibrationData = {
-							sums: [0, 0, 0, 0],
-							counts: [0, 0, 0, 0]
-						};
-						$scope.calibrating = 'Calibrating high end...';
-					}, 2000);
-				} else {
-					maxValues = [
-						parseFloat((calibrationData.sums[0] / calibrationData.counts[0]).toFixed(2)),
-						parseFloat((calibrationData.sums[1] / calibrationData.counts[1]).toFixed(2)),
-						parseFloat((calibrationData.sums[2] / calibrationData.counts[2]).toFixed(2)),
-						parseFloat((calibrationData.sums[3] / calibrationData.counts[3]).toFixed(2))
-					];
-					calibrating = 0;
-					$scope.$apply(function() {
-						delete $scope.calibrating;	
-					});
-					localStorage.setItem('LightSynthMinValues', JSON.stringify(minValues));
-					localStorage.setItem('LightSynthMaxValues', JSON.stringify(maxValues));
-				}
+			if((new Date() * 1) - calibrationStart < 3000 || calibrationData.counts[0] < 3 || !calibrationData.counts[1] < 3 || !calibrationData.counts[2] < 3 || !calibrationData.counts[3] < 3) return;
+			if(calibrating === 1) {
+				minValues = [
+					parseFloat((calibrationData.sums[0] / calibrationData.counts[0]).toFixed(2)),
+					parseFloat((calibrationData.sums[1] / calibrationData.counts[1]).toFixed(2)),
+					parseFloat((calibrationData.sums[2] / calibrationData.counts[2]).toFixed(2)),
+					parseFloat((calibrationData.sums[3] / calibrationData.counts[3]).toFixed(2))
+				];
+				calibrating = 0;
+				$scope.$apply(function() {
+					$scope.calibrating = 'Prepare to calibrate high end...';	
+				});
+				$timeout.cancel(calibrationTimeout);
+				calibrationTimeout = $timeout(function() {
+					calibrating = 2;
+					calibrationStart = new Date() * 1;
+					calibrationData = {
+						sums: [0, 0, 0, 0],
+						counts: [0, 0, 0, 0]
+					};
+					$scope.calibrating = 'Calibrating high end...';
+				}, 2000);
+			} else {
+				maxValues = [
+					parseFloat((calibrationData.sums[0] / calibrationData.counts[0]).toFixed(2)),
+					parseFloat((calibrationData.sums[1] / calibrationData.counts[1]).toFixed(2)),
+					parseFloat((calibrationData.sums[2] / calibrationData.counts[2]).toFixed(2)),
+					parseFloat((calibrationData.sums[3] / calibrationData.counts[3]).toFixed(2))
+				];
+				calibrating = 0;
+				$scope.$apply(function() {
+					delete $scope.calibrating;	
+				});
+				localStorage.setItem('LightSynthMinValues', JSON.stringify(minValues));
+				localStorage.setItem('LightSynthMaxValues', JSON.stringify(maxValues));
 			}
 		};
 
@@ -123,6 +122,12 @@ angular.module('LightSynth.controllers', [])
 				case 'volume':
 					synth.setVolume(percent);
 				break;
+				case 'cutoff':
+					synth.setCutoff(percent);
+				break;
+				case 'stroke':
+					synth.strokeNote(percent);
+				break;
 			}
 			$scope.percents[data.photoResistor] = data.value;
 		});
@@ -141,7 +146,8 @@ angular.module('LightSynth.controllers', [])
 			if(e.target.tagName.toLowerCase() === 'input') return;
 			var code = e.keyCode,
 				noteKeys = [81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221],
-				chordKeys = [65, 83, 68, 70, 71, 72, 74, 75, 76];
+				chordKeys = [65, 83, 68, 70, 71, 72, 74, 75, 76],
+				modeKeys = [90, 88, 67, 86, 66, 78, 77, 188];
 
 			var note;
 			if((note = noteKeys.indexOf(code)) !== -1) {
@@ -151,6 +157,11 @@ angular.module('LightSynth.controllers', [])
 			var chord;
 			if((chord = chordKeys.indexOf(code)) !== -1) {
 				document.querySelectorAll('.chords a')[chord].click();
+			}
+
+			var mode;
+			if((mode = modeKeys.indexOf(code)) !== -1) {
+				document.querySelectorAll('.sliders input[type="radio"]')[mode].click();
 			}
 
 			var list = document.querySelectorAll('.list li'),
