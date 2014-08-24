@@ -94,8 +94,8 @@ angular.module('LightSynth.services', [])
 		cutoff = {
 			min: 4,
 			max: 250,
-			interval: 300,
-			on: false,
+			interval: 250,
+			on: true,
 			lastTick: new Date() * 1
 		};
 
@@ -152,6 +152,8 @@ angular.module('LightSynth.services', [])
 				notesOn[midiNote + interval] = velocity || 127;
 				midi.sendMessage([144, midiNote + interval, velocity || 127]);
 			});
+			cutoff.on = true;
+			cutoff.lastTick = new Date() * 1;
 		},
 		contolMessage: function(message, percent) {
 			var value = Math.round(percent * 127 / 100);
@@ -168,6 +170,8 @@ angular.module('LightSynth.services', [])
 					midi.sendMessage([128, i, notesOn[i]]);
 					midi.sendMessage([144, i, notesOn[i]]);
 				}
+				cutoff.on = true;
+				cutoff.lastTick = new Date() * 1;
 				this.strokingNote = false;
 			}
 		}

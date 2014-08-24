@@ -35,7 +35,7 @@ angular.module('LightSynth.controllers', [])
 		calibration = function(data) {
 			calibrationData.sums[data.photoResistor] += data.value;
 			calibrationData.counts[data.photoResistor]++;
-			if((new Date() * 1) - calibrationStart < 3000 || calibrationData.counts[0] < 3 || !calibrationData.counts[1] < 3 || !calibrationData.counts[2] < 3 || !calibrationData.counts[3] < 3) return;
+			if((new Date() * 1) - calibrationStart < 3000 || calibrationData.counts[0] < 3 || calibrationData.counts[1] < 3 || calibrationData.counts[2] < 3 || calibrationData.counts[3] < 3) return;
 			if(calibrating === 1) {
 				minValues = [
 					parseFloat((calibrationData.sums[0] / calibrationData.counts[0]).toFixed(2)),
@@ -102,36 +102,31 @@ angular.module('LightSynth.controllers', [])
 	serialport.onData = function(data) {
 		if(calibrating !== 0) return calibration(data);
 		data.value = Math.min(maxValues[data.photoResistor], Math.max(minValues[data.photoResistor], data.value)) - minValues[data.photoResistor];
-		data.value = data.value * 100 / (maxValues[data.photoResistor] - minValues[data.photoResistor]);	
+		data.value =  Math.min(100, Math.max(0, data.value * 100 / (maxValues[data.photoResistor] - minValues[data.photoResistor])));
 		$scope.$apply(function() {
-			var action, percent;
-			if(data.photoResistor < 2) {
-				action = $scope.modeL;
-				$scope.invertL && (data.value = 100 - data.value);
-				percent = $scope.avgL = ($scope.percents[0] + $scope.percents[1]) / 2;
-			} else {
-				action = $scope.modeR;
-				$scope.invertR && (data.value = 100 - data.value);
-				percent = $scope.avgR = ($scope.percents[2] + $scope.percents[3]) / 2;
-			}
+			var left = data.photoResistor < 2;
+			$scope.percents[data.photoResistor] = ((left && $scope.invertL) || (!left && $scope.invertR)) ? (100 - data.value) : data.value;
+			
+			var avg = left ? ($scope.avgL = ($scope.percents[0] + $scope.percents[1]) / 2) : ($scope.avgR = ($scope.percents[2] + $scope.percents[3]) / 2),
+				action = $scope['mode' + (left ? 'L' : 'R')];
+			
 			switch(action) {
 				case 'pitch':
-					if($scope.mode === 'sequencer') sequencer.setNote(percent);
-					else synth.setNote(percent);
+					if($scope.mode === 'sequencer') sequencer.setNote(avg);
+					else synth.setNote(avg);
 				break;
 				case 'fx1':
 				case 'fx2':
 				case 'volume':
-					synth.contolMessage(action === 'volume' ? 7 : action === 'fx1' ? 12 : 13, percent);
+					synth.contolMessage(action === 'volume' ? 7 : action === 'fx1' ? 12 : 13, avg);
 				break;
 				case 'cutoff':
-					synth.setCutoff(percent);
+					synth.setCutoff(avg);
 				break;
 				case 'stroke':
-					synth.strokeNote(percent);
+					synth.strokeNote(avg);
 				break;
 			}
-			$scope.percents[data.photoResistor] = data.value;
 		});
 	};
 
@@ -171,10 +166,16 @@ angular.module('LightSynth.controllers', [])
 				index = Array.prototype.indexOf.call(active.parentNode.children, active);
 
 			switch(code) {
-				case 38:
+				case 37: /* left */
+					--synth.rootOctave < 1 && (synth.rootOctave = 1);
+				break;
+				case 39: /* right */
+					++synth.rootOctave > 6 && (synth.rootOctave = 6);
+				break;
+				case 38: /* up */
 					--index >= 0 && list[index].firstChild.click();
 				break;
-				case 40:
+				case 40: /* down */
 					++index < list.length && list[index].firstChild.click();
 				break;
 			}
