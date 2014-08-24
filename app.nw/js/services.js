@@ -128,7 +128,7 @@ angular.module('LightSynth.services', [])
 	
 	return {
 		note: 0,
-		volume: 100,
+		controlMessageValues: {},
 		roots: roots,
 		root: roots[0],
 		scales: scales,
@@ -153,10 +153,10 @@ angular.module('LightSynth.services', [])
 				midi.sendMessage([144, midiNote + interval, velocity || 127]);
 			});
 		},
-		setVolume: function(percent) {
-			var volume = Math.round(percent * 127 / 100);
-			if(this.volume === volume) return;
-			midi.sendMessage([176, 7, this.volume = volume]);
+		contolMessage: function(message, percent) {
+			var value = Math.round(percent * 127 / 100);
+			if(this.controlMessageValues[message] && this.controlMessageValues[message] === value) return;
+			midi.sendMessage([176, message, this.controlMessageValues[message] = value]);
 		},
 		setCutoff: function(percent) {
 			cutoff.interval = (percent * (cutoff.max - cutoff.min) / 100) + cutoff.min;

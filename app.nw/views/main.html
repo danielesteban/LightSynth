@@ -102,21 +102,25 @@
 					<input data-ng-model="synth.numOctaves" type="range" step="1" min="1" max="4">
 				</div>
 			</div>
-			<div>
+			<div class="axis">
 				Left axis:<br>
 				<label><input data-ng-model="modeL" type="radio" value="pitch"> Pitch</label>
-				<label><input data-ng-model="modeL" type="radio" value="volume"> Gain</label>
-				<label><input data-ng-model="modeL" type="radio" value="cutoff"> Cut-off</label>
 				<label><input data-ng-model="modeL" type="radio" value="stroke"> Stroke</label>
-				<label><input data-ng-model="invertL" type="checkbox"> Inverted</label>
+				<label><input data-ng-model="modeL" type="radio" value="cutoff"> Cut-off</label>
+				<label><input data-ng-model="modeL" type="radio" value="volume"> Vol</label>
+				<label><input data-ng-model="modeL" type="radio" value="fx1"> FX1</label>
+				<label><input data-ng-model="modeL" type="radio" value="fx2"> FX2</label>
+				<label><input data-ng-model="invertL" type="checkbox"> Inv</label>
 			</div>
-			<div>
+			<div class="axis">
 				Right axis:<br>
 				<label><input data-ng-model="modeR" type="radio" value="pitch"> Pitch</label>
-				<label><input data-ng-model="modeR" type="radio" value="volume"> Gain</label>
-				<label><input data-ng-model="modeR" type="radio" value="cutoff"> Cut-off</label>
 				<label><input data-ng-model="modeR" type="radio" value="stroke"> Stroke</label>
-				<label><input data-ng-model="invertR" type="checkbox"> Inverted</label>
+				<label><input data-ng-model="modeR" type="radio" value="cutoff"> Cut-off</label>
+				<label><input data-ng-model="modeR" type="radio" value="volume"> Vol</label>
+				<label><input data-ng-model="modeR" type="radio" value="fx1"> FX1</label>
+				<label><input data-ng-model="modeR" type="radio" value="fx2"> FX2</label>
+				<label><input data-ng-model="invertR" type="checkbox"> Inv</label>
 			</div>
 			<div class="calibration">
 				<button data-ng-hide="calibrating" data-ng-click="calibrate()">Calibrate</button>

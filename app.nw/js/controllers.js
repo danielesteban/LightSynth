@@ -119,8 +119,10 @@ angular.module('LightSynth.controllers', [])
 					if($scope.mode === 'sequencer') sequencer.setNote(percent);
 					else synth.setNote(percent);
 				break;
+				case 'fx1':
+				case 'fx2':
 				case 'volume':
-					synth.setVolume(percent);
+					synth.contolMessage(action === 'volume' ? 7 : action === 'fx1' ? 12 : 13, percent);
 				break;
 				case 'cutoff':
 					synth.setCutoff(percent);
