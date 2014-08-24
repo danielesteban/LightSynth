@@ -44,9 +44,9 @@
 					<li data-ng-repeat="(name, chord) in synth.chords" data-ng-class="{active: synth.chord === chord}"><a data-ng-click="synth.chord = chord">{{name}}</a></li>
 				</ul>
 			</div>
-			<div class="third">
+			<div class="list">
 				Scale:<br>
-				<ul class="list">
+				<ul>
 					<li data-ng-repeat="(name, scale) in synth.scales" data-ng-class="{active: synth.scale === scale}"><a data-ng-click="synth.scale = scale">{{name}}</a></li>
 				</ul>
 			</div>
@@ -60,7 +60,7 @@
 							<a data-ng-click="sequencer.removeNote()">×</a> &nbsp;&nbsp;
 						</span>
 						<a data-ng-click="sequencer.prevNote()">&lt;</a>&nbsp;
-						[{{sequencer.note + 1}} / {{sequencer.sequence.notes.length}}]&nbsp;
+						[{{sequencer.note + 1}}/{{sequencer.sequence.notes.length}}]&nbsp;
 						<a data-ng-click="sequencer.nextNote()">&gt;</a>
 					</span>
 					Note:
@@ -73,17 +73,15 @@
 					<li data-ng-repeat="(name, chord) in synth.chords" data-ng-class="{active: sequencer.sequence.notes[sequencer.note].chord === name}"><a data-ng-click="sequencer.editChord(name)">{{name}}</a></li>
 				</ul>
 			</div>
-			<div class="third">
-				<div class="clearfix">
-					<span class="right">
-						<a data-ng-click="sequencer.addSequence()">+</a>
-						<span data-ng-if="sequencer.sequences.length > 1">
-							&nbsp;&nbsp; <a data-ng-click="sequencer.removeSequence()">×</a>
-						</span>
+			<div class="list">
+				<span class="right">
+					<a data-ng-click="sequencer.addSequence()">+</a>
+					<span data-ng-if="sequencer.sequences.length > 1">
+						&nbsp;&nbsp; <a data-ng-click="sequencer.removeSequence()">×</a>
 					</span>
-					Sequences:
-				</div>
-				<ul class="list">
+				</span>
+				Sequences:
+				<ul>
 					<li data-ng-repeat="sequence in sequencer.sequences" data-ng-class="{active: sequencer.sequence === sequence}"><a data-ng-dblclick="sequencer.editName(sequence)" data-ng-click="sequencer.sequence = sequence; sequencer.note = 0">
 						<span data-ng-hide="sequence.editName">{{sequence.name}}</span>
 						<input data-ng-show="sequence.editName" type="text" data-ng-model="sequence.name" data-ng-change="sequence.editName()" autofocus>
@@ -91,18 +89,8 @@
 				</ul>
 			</div>
 		</div>
-		<div class="sliders">
-			<div class="row clearfix">
-				<div class="half">
-					Octave: {{synth.rootOctave}}<br>
-					<input data-ng-model="synth.rootOctave" type="range" step="1" min="1" max="6">
-				</div>
-				<div class="half">
-					Range: {{synth.numOctaves}}<br>
-					<input data-ng-model="synth.numOctaves" type="range" step="1" min="1" max="4">
-				</div>
-			</div>
-			<div class="axis">
+		<div class="settings">
+			<div>
 				Left axis:<br>
 				<label><input data-ng-model="modeL" type="radio" value="pitch"> Pitch</label>
 				<label><input data-ng-model="modeL" type="radio" value="stroke"> Stroke</label>
@@ -112,7 +100,7 @@
 				<label><input data-ng-model="modeL" type="radio" value="fx2"> FX2</label>
 				<label><input data-ng-model="invertL" type="checkbox"> Inv</label>
 			</div>
-			<div class="axis">
+			<div class="margin">
 				Right axis:<br>
 				<label><input data-ng-model="modeR" type="radio" value="pitch"> Pitch</label>
 				<label><input data-ng-model="modeR" type="radio" value="stroke"> Stroke</label>
@@ -121,6 +109,18 @@
 				<label><input data-ng-model="modeR" type="radio" value="fx1"> FX1</label>
 				<label><input data-ng-model="modeR" type="radio" value="fx2"> FX2</label>
 				<label><input data-ng-model="invertR" type="checkbox"> Inv</label>
+			</div>
+			<div class="row clearfix">
+				<div class="half">
+					<span class="right">{{synth.rootOctave}}</span>
+					Octave:
+					<input data-ng-model="synth.rootOctave" type="range" step="1" min="1" max="6">
+				</div>
+				<div class="half">
+					<span class="right">{{synth.numOctaves}}</span>
+					Range:
+					<input data-ng-model="synth.numOctaves" type="range" step="1" min="1" max="6">
+				</div>
 			</div>
 			<div class="calibration">
 				<button data-ng-hide="calibrating" data-ng-click="calibrate()">Calibrate</button>

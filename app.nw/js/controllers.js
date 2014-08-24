@@ -148,8 +148,8 @@ angular.module('LightSynth.controllers', [])
 			if(e.target.tagName.toLowerCase() === 'input') return;
 			var code = e.keyCode,
 				noteKeys = [81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221],
-				chordKeys = [65, 83, 68, 70, 71, 72, 74, 75, 76],
-				modeKeys = [90, 88, 67, 86, 66, 78, 77, 188];
+				chordKeys = [65, 83, 68, 70, 71, 72, 74, 75, 76, 186],
+				modeKeys = [49, 50, 51, 52, 53, 54, 90, 88, 67, 86, 66, 78];
 
 			var note;
 			if((note = noteKeys.indexOf(code)) !== -1) {
@@ -163,7 +163,7 @@ angular.module('LightSynth.controllers', [])
 
 			var mode;
 			if((mode = modeKeys.indexOf(code)) !== -1) {
-				document.querySelectorAll('.sliders input[type="radio"]')[mode].click();
+				document.querySelectorAll('.settings input[type="radio"]')[mode].click();
 			}
 
 			var list = document.querySelectorAll('.list li'),
