@@ -1,6 +1,14 @@
 <div id="main" class="container">
-	<h1 style="text-align: center">
-		{{synth.roots[synth.note % 12].name}} ({{synth.note}})
+	<h1>
+		<span class="note">
+			[{{synth.note}}]
+		</span>
+		<span class="noteName">
+			{{synth.roots[synth.note % 12].name}}
+		</span>
+		<span class="chord" data-ng-repeat="(name, chord) in synth.chords" data-ng-if="synth.chord === chord">
+			{{name}}
+		</span>
 	</h1>
 	<div class="row clearfix">
 		<div class="half">
