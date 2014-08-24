@@ -92,8 +92,8 @@ angular.module('LightSynth.services', [])
 		},
 		notesOn = {},
 		cutoff = {
-			min: 10,
-			max: 300,
+			min: 4,
+			max: 250,
 			interval: 300,
 			on: false,
 			lastTick: new Date() * 1
@@ -159,7 +159,7 @@ angular.module('LightSynth.services', [])
 			midi.sendMessage([176, message, this.controlMessageValues[message] = value]);
 		},
 		setCutoff: function(percent) {
-			cutoff.interval = (percent * (cutoff.max - cutoff.min) / 100) + cutoff.min;
+			cutoff.interval = ((100 - percent) * (cutoff.max - cutoff.min) / 100) + cutoff.min;
 		},
 		strokeNote: function(percent) {
 			if(!this.strokingNote && percent <= 45) this.strokingNote = true;
