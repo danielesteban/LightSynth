@@ -107,7 +107,7 @@ angular.module('LightSynth.services', [])
 		scales[i].unshift(0);
 	}
 
-	midi.openVirtualPort("LightSynth");
+	midi.openVirtualPort('LightSynth');
 	return {
 		note: 0,
 		volume: 100,
@@ -261,29 +261,89 @@ angular.module('LightSynth.services', [])
 		api.sequences = [
 			{
 				id: now,
-				name: 'Test',
+				name: 'C Bm7 E7 Am7 Dm7 G7',
 				notes: [
 					{
-						note: 0,
-						chord: 'Major'
+						chord: 'Major',
+						note: 0
 					},
 					{
-						note: 9,
-						chord: 'Minor'
+						chord: 'Min7',
+						note: 11
+					},
+					{
+						chord: 'Maj7',
+						note: 4
+					},
+					{
+						chord: 'Min7',
+						note: 9
+					},
+					{
+						chord: 'Min7',
+						note: 2
+					},
+					{
+						chord: 'Maj7',
+						note: 7
 					}
 				]
 			},
 			{
 				id: now + 1,
-				name: 'Test 2',
+				name: 'E A B7',
 				notes: [
 					{
-						note: 6,
-						chord: 'Maj7'
+						chord: 'Major',
+						note: 4
 					},
 					{
-						note: 12,
-						chord: 'Aug7'
+						chord: 'Major',
+						note: 9
+					},
+					{
+						chord: 'Maj7',
+						note: 11
+					}
+				]
+			},
+			{
+				id: now + 2,
+				name: 'G Em C D',
+				notes: [
+					{
+						chord: 'Major',
+						note: 7
+					},
+					{
+						chord: 'Minor',
+						note: 4
+					},
+					{
+						chord: 'Major',
+						note: 0
+					},
+					{
+						chord: 'Major',
+						note: 2
+					}
+				]
+			},
+			{
+				id: now + 3,
+				name: 'Dm7 G7 C7',
+				notes: [
+					{
+						chord: 'Min7',
+						note: 2
+					},
+					{
+						chord: 'Maj7',
+						note: 7
+					},
+					{
+						chord: 'Maj7',
+						note: 0
 					}
 				]
 			}
