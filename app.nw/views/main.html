@@ -55,34 +55,37 @@
 			<div class="buttons">
 				<div class="clearfix">
 					<span class="right">
-						<a data-ng-click="addNote()">+</a> &nbsp;&nbsp;
+						<a data-ng-click="sequencer.addNote()">+</a> &nbsp;&nbsp;
 						<span data-ng-if="sequencer.sequence.notes.length > 1">
-							<a data-ng-click="removeNote()">×</a> &nbsp;&nbsp;
+							<a data-ng-click="sequencer.removeNote()">×</a> &nbsp;&nbsp;
 						</span>
 						[{{sequencer.note + 1}} / {{sequencer.sequence.notes.length}}]
 					</span>
 					Note:
 				</div>
 				<ul class="notes clearfix">
-					<li data-ng-repeat="note in synth.roots" data-ng-class="{active: sequencer.sequence.notes[sequencer.note].note === $index}"><a data-ng-click="editNote($index)">{{note.name}}</a></li>
+					<li data-ng-repeat="note in synth.roots" data-ng-class="{active: sequencer.sequence.notes[sequencer.note].note === $index}"><a data-ng-click="sequencer.editNote($index)">{{note.name}}</a></li>
 				</ul>
 				Chord:<br>
 				<ul class="chords clearfix">
-					<li data-ng-repeat="(name, chord) in synth.chords" data-ng-class="{active: sequencer.sequence.notes[sequencer.note].chord === name}"><a data-ng-click="editChord(name)">{{name}}</a></li>
+					<li data-ng-repeat="(name, chord) in synth.chords" data-ng-class="{active: sequencer.sequence.notes[sequencer.note].chord === name}"><a data-ng-click="sequencer.editChord(name)">{{name}}</a></li>
 				</ul>
 			</div>
 			<div class="third">
 				<div class="clearfix">
 					<span class="right">
-						<a data-ng-click="addSequence()">+</a> &nbsp;&nbsp;
+						<a data-ng-click="sequencer.addSequence()">+</a>
 						<span data-ng-if="sequencer.sequences.length > 1">
-							<a data-ng-click="removeSequence()">×</a>
+							&nbsp;&nbsp; <a data-ng-click="sequencer.removeSequence()">×</a>
 						</span>
 					</span>
 					Sequences:
 				</div>
 				<ul class="list">
-					<li data-ng-repeat="sequence in sequencer.sequences" data-ng-class="{active: sequencer.sequence === sequence}"><a data-ng-click="sequencer.sequence = sequence; sequencer.note = 0">{{sequence.name}}</a></li>
+					<li data-ng-repeat="sequence in sequencer.sequences" data-ng-class="{active: sequencer.sequence === sequence}"><a data-ng-dblclick="sequencer.editName(sequence)" data-ng-click="sequencer.sequence = sequence; sequencer.note = 0">
+						<span data-ng-hide="sequence.editName">{{sequence.name}}</span>
+						<input data-ng-show="sequence.editName" type="text" data-ng-model="sequence.name" data-ng-change="sequence.editName()" autofocus>
+					</a></li>
 				</ul>
 			</div>
 		</div>

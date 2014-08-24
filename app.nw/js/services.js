@@ -140,39 +140,78 @@ angular.module('LightSynth.services', [])
 		}
 	};
 })
-.factory('sequencer', function(synth) {
-	var sequences = JSON.parse(localStorage.getItem('LightSynthSequences') || '[]');
-	if(sequences.length) {
-		sequences.forEach(function(id, i) {
-			sequences[i] = JSON.parse(localStorage.getItem('LightSynthSequence' + id) || '{}');
-		});
-	} else {
-		sequences = [
-			{"name": "Test", "notes": [{"note": 0, "chord": "Major"}, {"note": 9, "chord": "Minor"}]},
-			{"name": "Test 2", "notes": [{"note": 6, "chord": "Maj7"}, {"note": 12, "chord": "Aug7"}]}
-		];
-	}
+.factory('sequencer', function(synth, $rootScope, $window) {
+	var api = {
+			note: 0,
+			sequences: JSON.parse(localStorage.getItem('LightSynthSequences') || '[]'),
+			switchingNote: false,
+			setNote: function(percent) {
+				if(!this.switchingNote && percent <= 40) this.switchingNote = true;
+				else if(this.switchingNote && percent >= 60) {
+					synth.root = synth.roots[this.sequence.notes[this.note].root || 0];
+					synth.scale = synth.scales[this.sequence.notes[this.note].scale || 'All Notes'];
+					synth.chord = synth.chords[this.sequence.notes[this.note].chord || 'Note'];
+					synth.setNote(false, this.sequence.notes[this.note].note || 0);
+					++this.note >= this.sequence.notes.length && (this.note = 0);
+					this.switchingNote = false;
+				}
+			},
+			addNote: function() {
+				var notes = this.sequence.notes,
+					note = notes[this.note];
 
-	return {
-		note: 0,
-		sequences: sequences,
-		sequence: sequences[0],
-		switchingNote: false,
-		setNote: function(percent) {
-			if(!this.switchingNote && percent <= 40) this.switchingNote = true;
-			else if(this.switchingNote && percent >= 60) {
-				synth.root = synth.roots[this.sequence.notes[this.note].root || 0];
-				synth.scale = synth.scales[this.sequence.notes[this.note].scale || 'All Notes'];
-				synth.chord = synth.chords[this.sequence.notes[this.note].chord || 'Note'];
-				synth.setNote(false, this.sequence.notes[this.note].note || 0);
-				++this.note >= this.sequence.notes.length && (this.note = 0);
-				this.switchingNote = false;
-			}
-		},
-		save: function() {
-			var ids = [];
-			sequences.forEach(function(sequence) {
+				notes.splice(++this.note, 0, {
+					note: note.note,
+					chord: note.chord
+				});
+				this.saveSequence();
+			},
+			editNote: function(index) {
+				this.sequence.notes[this.note].note = index;
+				this.saveSequence();
+			},
+			editChord: function(name) {
+				this.sequence.notes[this.note].chord = name;
+				this.saveSequence();
+			},
+			removeNote: function() {
+				this.sequence.notes.splice(this.note--, 1);
+				this.note < 0 && (this.note = 0);
+				this.saveSequence();
+			},
+			addSequence: function() {
+				this.sequences.unshift(this.sequence = {
+					id: new Date() * 1,
+					name: 'New sequence',
+					notes: [
+						{
+							note: 0,
+							chord: 'Note'
+						}
+					]
+				});
+				this.saveSequence();
+				this.saveList();
+			},
+			editName: function(sequence) {
+				var self = this,
+					hide = function(e) {
+						if(e.target.tagName.toLowerCase() === 'input') return;
+						$window.removeEventListener('mousedown', hide, false);
+						$rootScope.$apply(function() {
+							delete sequence.editName;	
+						});
+					};
+
+				$window.addEventListener('mousedown', hide, false);
+				sequence.editName = function() {
+					self.saveSequence(sequence);
+				};
+			},
+			saveSequence: function(sequence) {
+				sequence = sequence || this.sequence;
 				var s = {
+						id: parseInt(sequence.id, 10),
 						name: sequence.name + '',
 						notes: []
 					};
@@ -185,12 +224,72 @@ angular.module('LightSynth.services', [])
 					(note.note || note.note === 0) && (n.note = parseInt(note.note, 10));
 					s.notes.push(n);
 				});
-				localStorage.setItem('LightSynthSequence' + s.name, JSON.stringify(s));
-				ids.push(s.name);
-			});
-			localStorage.setItem('LightSynthSequences', JSON.stringify(ids));
-		}
-	};
+				localStorage.setItem('LightSynthSequence' + s.id, JSON.stringify(s));
+			},
+			removeSequence: function() {
+				var id = this.sequence.id;
+				for(var i in this.sequences) {
+					if(this.sequences[i].id === id) {
+						this.sequences.splice(i, 1);
+						this.sequence = this.sequences[i > 0 ? i - 1 : i];
+						this.saveList();
+						localStorage.removeItem('LightSynthSequence' + id);
+					}
+				}
+			},
+			saveList: function() {
+				var ids = [];
+				this.sequences.forEach(function(s) {
+					ids.push(parseInt(s.id, 10));
+				});
+				localStorage.setItem('LightSynthSequences', JSON.stringify(ids));
+			}
+		};
+
+	if(api.sequences.length) {
+		api.sequences.forEach(function(id, i) {
+			api.sequences[i] = JSON.parse(localStorage.getItem('LightSynthSequence' + id) || '{}');
+		});
+	} else {
+		var now = new Date() * 1;
+		api.sequences = [
+			{
+				id: now,
+				name: 'Test',
+				notes: [
+					{
+						note: 0,
+						chord: 'Major'
+					},
+					{
+						note: 9,
+						chord: 'Minor'
+					}
+				]
+			},
+			{
+				id: now + 1,
+				name: 'Test 2',
+				notes: [
+					{
+						note: 6,
+						chord: 'Maj7'
+					},
+					{
+						note: 12,
+						chord: 'Aug7'
+					}
+				]
+			}
+		];
+		api.sequences.forEach(function(sequence) {
+			api.saveSequence(sequence);
+		});
+		api.saveList();
+	}
+
+	api.sequence = api.sequences[0];
+	return api;
 })
 .factory('autoupdater', function() {
 	var fs = require('fs'),

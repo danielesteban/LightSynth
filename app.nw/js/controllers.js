@@ -89,54 +89,6 @@ angular.module('LightSynth.controllers', [])
 		}, 2000);
 	};
 
-	/* Sequencer handlers */
-	$scope.addNote = function() {
-		var notes = sequencer.sequence.notes,
-			note = sequencer.note;
-
-		notes.splice(++sequencer.note, 0, {
-			note: notes[note].note,
-			chord: notes[note].chord
-		});
-		sequencer.save();
-	};
-
-	$scope.editNote = function(index) {
-		sequencer.sequence.notes[sequencer.note].note = index;
-		sequencer.save();
-	};
-
-	$scope.editChord = function(name) {
-		sequencer.sequence.notes[sequencer.note].chord = name;
-		sequencer.save();
-	};
-
-	$scope.removeNote = function() {
-		var notes = sequencer.sequence.notes;
-		notes.splice(sequencer.note--, 1);
-		sequencer.note < 0 && (sequencer.note = 0);
-		sequencer.save();
-	};
-
-	$scope.addSequence = function() {
-		sequencer.sequences.splice(++sequencer.sequence, 0, {
-			name: 'New sequence',
-			notes: [
-				{
-					note: 0,
-					chord: 'Note'
-				}
-			]
-		});
-		sequencer.save();
-	};
-
-	$scope.removeSequence = function() {
-		sequencer.sequences.splice(sequencer.sequence--, 1);
-		sequencer.sequence < 0 && (sequencer.sequence = 0);
-		sequencer.save();
-	};
-
 	/* Process serial data */
 	$scope.avgL = 0;
 	$scope.avgR = 0;
@@ -167,6 +119,7 @@ angular.module('LightSynth.controllers', [])
 	
 	/* Keyboard Handler */
 	var keydownHandler = function(e) {
+			if(e.target.tagName.toLowerCase() === 'input') return;
 			var code = e.keyCode,
 				noteKeys = [81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221],
 				chordKeys = [65, 83, 68, 70, 71, 72, 74, 75, 76];
