@@ -15,10 +15,7 @@ You'll need an arduino compatible board.
 
 Upload the `LightSynth.ino` sketch to it and hook up 4 photoresistors in this fashion:
 
-               PhotoR     10K
-     +5V   o---/\/\/--.--/\/\/---o GND
-                      |
-    Pin A0 o-----------
+![Breadboard](https://raw.githubusercontent.com/danielesteban/LightSynth/master/screenshots/breadboard.png)
 
 These are two photoresistors for each hand/axis. Each of the axis can control the pitch, the volume and send 2 FX midi control messages. It also includes a stroke feature and a dubstepian cut-off.
 
